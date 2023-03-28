@@ -18,11 +18,31 @@ namespace Net6Worker
             _logger = logger;
         }
 
-        public Task Execute(IJobExecutionContext context)
+        //public Task Execute(IJobExecutionContext context)
+        //{
+        //    _logger.LogInformation("Hello world!");
+        //    return Task.CompletedTask;
+        //}
+
+        public async Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation("Hello world!");
-            return Task.CompletedTask;
+            try
+            {                
+                string path = @"C:\\Temp\\Net6WorkerLogs.txt";
+                await using (StreamWriter writer = new StreamWriter(path, true))
+                {
+                    writer.WriteLine("Log Time: " + DateTime.Now);
+                    writer.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Exception: " + ex.Message);
+            }
+            
+            await Task.CompletedTask;
         }
+
     }
 
 }
